@@ -1,0 +1,192 @@
+
+R version 4.2.1 (2022-06-23 ucrt) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> regresi<-read.table("C:/Analisis Regresi Sederhana dan Korelasi Sederhana.txt", header=T)
+> regresi
+    x   y
+1  54 167
+2  50 155
+3  53 148
+4  45 146
+5  48 170
+6  63 173
+7  46 149
+8  56 166
+9  52 170
+10 56 174
+11 47 156
+12 56 158
+13 55 150
+14 52 160
+15 50 157
+16 60 177
+17 55 166
+18 45 160
+19 47 155
+20 53 159
+21 49 159
+22 56 172
+23 57 168
+24 50 159
+25 49 150
+26 58 165
+27 48 159
+28 52 162
+29 56 168
+30 54 166
+31 59 177
+32 47 149
+33 48 155
+34 56 160
+> kualitaslayanan<-regresi$x
+> tingkatpenjualan<-regresi$y
+> plot(kualitaslayanan, tingkatpenjualan)
+> hasil<-lm(tingkatpenjualan~kualitaslayanan)
+> hasil
+
+Call:
+lm(formula = tingkatpenjualan ~ kualitaslayanan)
+
+Coefficients:
+    (Intercept)  kualitaslayanan  
+         93.850            1.287  
+
+> residual<-resid(hasil)
+> residual
+           1            2            3            4            5 
+  3.63180444  -3.21866599 -14.08081317  -5.78175403  14.35609879 
+           6            7            8            9           10 
+ -1.95463710  -4.06913642   0.05703965   9.20656922   8.05703965 
+          11           12           13           14           15 
+  1.64348118  -7.94296035 -14.65557796  -0.79343078  -1.21866599 
+          16           17           18           19           20 
+  5.90751008   1.34442204   8.21824597   0.64348118  -3.08081317 
+          21           22           23           24           25 
+  2.06871640   6.05703965   0.76965726   0.78133401  -6.93128360 
+          26           27           28           29           30 
+ -3.51772513   3.35609879   1.20656922   2.05703965   2.63180444 
+          31           32           33           34 
+  7.19489247  -5.35651882  -0.64390121  -5.94296035 
+> qqnorm(residual)
+> shapiro.test(residual)
+
+        Shapiro-Wilk normality test
+
+data:  residual
+W = 0.97919, p-value = 0.7472
+
+> plot(residual)
+> library(lmtest)
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning messages:
+1: package ‘lmtest’ was built under R version 4.2.2 
+2: package ‘zoo’ was built under R version 4.2.2 
+> dwtest(tingkatpenjualan~kualitaslayanan)
+
+        Durbin-Watson test
+
+data:  tingkatpenjualan ~ kualitaslayanan
+DW = 1.5702, p-value = 0.1108
+alternative hypothesis: true autocorrelation is greater than 0
+
+> taksiran<-fitted(hasil)
+> taksiran
+       1        2        3        4        5        6        7        8 
+163.3682 158.2187 162.0808 151.7818 155.6439 174.9546 153.0691 165.9430 
+       9       10       11       12       13       14       15       16 
+160.7934 165.9430 154.3565 165.9430 164.6556 160.7934 158.2187 171.0925 
+      17       18       19       20       21       22       23       24 
+164.6556 151.7818 154.3565 162.0808 156.9313 165.9430 167.2303 158.2187 
+      25       26       27       28       29       30       31       32 
+156.9313 168.5177 155.6439 160.7934 165.9430 163.3682 169.8051 154.3565 
+      33       34 
+155.6439 165.9430 
+> kresid<-residual*residual
+> kresid
+           1            2            3            4            5 
+1.319000e+01 1.035981e+01 1.982693e+02 3.342868e+01 2.060976e+02 
+           6            7            8            9           10 
+3.820606e+00 1.655787e+01 3.253522e-03 8.476092e+01 6.491589e+01 
+          11           12           13           14           15 
+2.701030e+00 6.309062e+01 2.147860e+02 6.295324e-01 1.485147e+00 
+          16           17           18           19           20 
+3.489868e+01 1.807471e+00 6.753957e+01 4.140680e-01 9.491410e+00 
+          21           22           23           24           25 
+4.279588e+00 3.668773e+01 5.923723e-01 6.104828e-01 4.804269e+01 
+          26           27           28           29           30 
+1.237439e+01 1.126340e+01 1.455809e+00 4.231412e+00 6.926395e+00 
+          31           32           33           34 
+5.176648e+01 2.869229e+01 4.146088e-01 3.531878e+01 
+> plot(taksiran,kresid)
+> cor.test(abs(residual),kualitaslayanan,method="spearman")
+
+        Spearman's rank correlation rho
+
+data:  abs(residual) and kualitaslayanan
+S = 6249.7, p-value = 0.8
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.0451132 
+
+Warning message:
+In cor.test.default(abs(residual), kualitaslayanan, method = "spearman") :
+  Cannot compute exact p-value with ties
+> summary(hasil)
+
+Call:
+lm(formula = tingkatpenjualan ~ kualitaslayanan)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-14.6556  -3.4430   0.7066   3.1750  14.3561 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      93.8495    12.5288   7.491 1.58e-08 ***
+kualitaslayanan   1.2874     0.2382   5.406 6.10e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 6.302 on 32 degrees of freedom
+Multiple R-squared:  0.4773,    Adjusted R-squared:  0.461 
+F-statistic: 29.22 on 1 and 32 DF,  p-value: 6.102e-06
+
+> cor.test(kualitaslayanan,tingkatpenjualan)
+
+        Pearson's product-moment correlation
+
+data:  kualitaslayanan and tingkatpenjualan
+t = 5.4057, df = 32, p-value = 6.102e-06
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.4602295 0.8341549
+sample estimates:
+      cor 
+0.6908721 
+
